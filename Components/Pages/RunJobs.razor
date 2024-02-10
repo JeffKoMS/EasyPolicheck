@@ -2,19 +2,15 @@
 @using System.IO;
 @using System;
 @using System.Text.Json;
-
+@inject IJSRuntime JS;
 
 <h1>Hello, world!</h1>
-
-@* @Location.Location *@
 
 Welcome to your new app.
 
 @code {
 
-
-
- @*    protected override void OnAfterRender(bool firstRender)
+    protected override void OnAfterRender(bool firstRender)
     {
 
         if (firstRender)
@@ -38,20 +34,37 @@ Welcome to your new app.
         {
             Console.WriteLine("Not first render");
         }
-
-    } *@
-
-    @* private policheckLoc? Location;
-    protected override async Task OnInitializedAsync() {
-    Location = await Http.GetFromJsonAsync<policheckLoc>("data/policheckLoc.json");
     }
 
-
-    public class policheckLoc
+    public class PolicheckLocated
     {
-        public string? Location {get; set; }
-        public bool Found {get; set;}
+        public string? Location { get; set; }
+        public bool Found { get; set; }
     }
-     *@
+
+    protected override async Task OnInitializedAsync()
+    {
+        string jsonText = await ReadData("wwwroot/data/policheckLocation.json");
+        try
+        {
+            PolicheckLocated? policheckLocated = JsonSerializer.Deserialize<PolicheckLocated>(jsonText);
+            Console.WriteLine($"Location: {policheckLocated?.Location}");
+            Console.WriteLine($"Location: {policheckLocated.Found}");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+    }
+
+    public async Task<string> ReadData(string fName)
+    {
+        using var stream = await FileSystem.OpenAppPackageFileAsync(fName);
+        using var reader = new StreamReader(stream);
+
+        return await reader.ReadToEndAsync();
+    }
+
+
 
 }

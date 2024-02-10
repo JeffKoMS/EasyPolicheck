@@ -1,0 +1,27 @@
+﻿@page "/manage"
+@using CommunityToolkit.Maui.Storage;
+
+
+<h1>Edit Jobs</h1>
+
+<p role="status">Current count: @fPicked</p>
+
+<button class="btn btn-primary" @onclick="PickFolder">Click me</button>
+
+@code {
+    string fPicked = "empty";
+    async Task PickFolder( )
+    {
+        var result = await FolderPicker.Default.PickAsync( );
+        if (result.IsSuccessful)
+        {
+            fPicked = result.Folder.Path.ToString();
+        }
+        else
+        {
+            fPicked = "empty";
+            Console.WriteLine("The folder was not picked with error");
+
+        }
+    }
+}

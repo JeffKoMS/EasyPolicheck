@@ -1,0 +1,38 @@
+﻿@page "/"
+@using System.IO;
+@using System;
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+@code {
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+
+        if (firstRender)
+        {
+            string poliInstall = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
+            @"\policheck\tools\policheck.exe";
+            bool found = File.Exists(poliInstall);
+
+            if (File.Exists(poliInstall))
+            {
+                Console.WriteLine("File exists");
+            }
+            else
+            {
+                Console.WriteLine("Can't find");
+            }
+            firstRender = false;
+
+        }
+        else
+        {
+            Console.WriteLine("Not first render");
+        }
+
+    }
+
+}

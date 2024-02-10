@@ -1,14 +1,20 @@
 ﻿@page "/"
 @using System.IO;
 @using System;
+@using System.Text.Json;
+
 
 <h1>Hello, world!</h1>
+
+@Location.Location
 
 Welcome to your new app.
 
 @code {
 
-    protected override void OnAfterRender(bool firstRender)
+
+
+ @*    protected override void OnAfterRender(bool firstRender)
     {
 
         if (firstRender)
@@ -33,6 +39,19 @@ Welcome to your new app.
             Console.WriteLine("Not first render");
         }
 
+    } *@
+
+    @* private policheckLoc? Location;
+    protected override async Task OnInitializedAsync() {
+    Location = await Http.GetFromJsonAsync<policheckLoc>("data/policheckLoc.json");
     }
+
+
+    public class policheckLoc
+    {
+        public string? Location {get; set; }
+        public bool Found {get; set;}
+    }
+     *@
 
 }

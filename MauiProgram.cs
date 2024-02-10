@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
-using Microsoft.AspNetCore.Components;
-using System.Net.Http;
 
 namespace EasyPolicheck;
 
@@ -19,7 +17,6 @@ public static class MauiProgram
 			});
 
 		builder.Services.AddMauiBlazorWebView();
-		/* builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) }); */
 
 #if DEBUG
 		builder.Services.AddBlazorWebViewDeveloperTools();

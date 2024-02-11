@@ -3,6 +3,7 @@
 @using System;
 @using System.Text.Json;
 @using System.Text.Json.Serialization;
+@using EasyPolicheck.Data;
 
 
 <div>
@@ -15,8 +16,6 @@
 @code {
 
     string runStatus = "Verifying Policheck location";
-
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -67,10 +66,6 @@
         }
     }
 
-        public class PolicheckLocated
-    {
-        public string? Location { get; set; }
-        public bool Found { get; set; }
-    }
+
 
 }

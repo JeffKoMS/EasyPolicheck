@@ -1,10 +1,13 @@
 ﻿using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
+using EasyPolicheck.Data;
 
 namespace EasyPolicheck;
 
 public static class MauiProgram
 {
+
+	
 	public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
@@ -17,6 +20,8 @@ public static class MauiProgram
 			});
 
 		builder.Services.AddMauiBlazorWebView();
+		builder.Services.AddSingleton<JobsService>();
+
 
 #if DEBUG
 		builder.Services.AddBlazorWebViewDeveloperTools();

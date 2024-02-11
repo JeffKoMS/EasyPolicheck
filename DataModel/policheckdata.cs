@@ -1,7 +1,6 @@
 namespace EasyPolicheck.Data;
 
-public class PolicheckLocated
+public class PolicheckLocation
 {
     public string? Location { get; set; } = string.Empty;
-    public bool Found { get; set; } = false;
 }

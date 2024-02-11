@@ -8,7 +8,7 @@ public class JobsService
 
     public JobsService()
     {
-        jobsFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "EasyPolicheck", "jobs.json");
+        jobsFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),  "jobs.json");
     }
 
     public void SaveJobs(IEnumerable<JobInfo> jobs)

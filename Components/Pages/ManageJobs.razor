@@ -1,28 +1,51 @@
-﻿@page "/manage"
-@using CommunityToolkit.Maui.Storage;
+﻿@page "/managejobs"
+@using EasyPolicheck.Data;
+@inject JobsService JobsService
+@inject NavigationManager NavManager
 
 
-<h1>Edit Jobs</h1>
+<h2>Manage Jobs</h2>
 
-@* <p role="status">Current count: @fPicked</p>
-
-<button class="btn btn-primary" @onclick="PickFolder">Click me</button>
+@if (jobs == null)
+{
+    <p><em>No jobs found...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Source Dir</th>
+                <th>Destination Dir</th>
+                <th>Language</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var job in jobs)
+            {
+                <tr>
+                    <td>@job.JobTitle</td>
+                    <td>@job.SourceDir</td>
+                    <td>@job.DestDir</td>
+                    <td>@job.JobLang</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<button class="btn btn-primary" onclick="window.location.href='/addjob'">Add Job</button>
 
 @code {
-    string fPicked = "empty";
-    async Task PickFolder( )
-    {
-        var result = await FolderPicker.Default.PickAsync( );
-        if (result.IsSuccessful)
-        {
-            fPicked = result.Folder.Path.ToString();
-        }
-        else
-        {
-            fPicked = "empty";
-            Console.WriteLine("The folder was not picked with error");
 
-        }
+    public JobInfo[] jobs;
+    protected override void OnInitialized()
+    {
+        var jobs = JobsService.LoadJobs();
+    }
+
+    protected void OnAfterRender()
+    {
+        var jobs = JobsService.LoadJobs();
     }
 }
- *@

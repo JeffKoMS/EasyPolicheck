@@ -1,9 +1,6 @@
 ﻿@page "/"
-@using System.IO;
-@using System;
-@using System.Text.Json;
-@using System.Text.Json.Serialization;
 @using EasyPolicheck.Data;
+@inject JobsService JobsService
 
 
 <div>
@@ -17,33 +14,10 @@
 
     string runStatus = "Verifying Policheck location";
 
-    protected override async Task OnInitializedAsync()
-    {
-        string jsonText = await ReadData("wwwroot/data/policheckLocation.json");
-        try
-        {
-            PolicheckLocated? policheckLocated = JsonSerializer.Deserialize<PolicheckLocated>(jsonText);
-            Console.WriteLine($"Location: {policheckLocated?.Location}");
-            Console.WriteLine($"Location: {policheckLocated.Found}");
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-        }
-    }
-
-    public async Task<string> ReadData(string fName)
-    {
-        using var stream = await FileSystem.OpenAppPackageFileAsync(fName);
-        using var reader = new StreamReader(stream);
-
-        return await reader.ReadToEndAsync();
-    }
-
     protected override void OnAfterRender(bool firstRender)
     {
 
-        if (firstRender)
+@*         if (firstRender)
         {
             string poliInstall = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
             @"\policheck\tools\policheck.exe";
@@ -62,10 +36,7 @@
         }
         else
         {
-            Console.WriteLine("Not first render");
+            Console.WriteLine("Not first render");*@
         }
-    }
-
-
-
+    } 
 }

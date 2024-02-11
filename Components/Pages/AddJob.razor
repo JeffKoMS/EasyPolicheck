@@ -1,0 +1,36 @@
+@page "/addjob"
+@using EasyPolicheck.Data;
+@inject JobsService JobsService
+@inject NavigationManager NavManager
+
+<p>Nothing to see here yet.</p>
+
+<h3>Job information</h3>
+
+<input placeholder="Enter a title for this job" bind="jobinfo.JobTitle" />
+<input placeholder="Select source directory" bind="jobinfo.SourceDir" />
+<input placeholder="Select destination directory" bind="jobinfo.DestDir" />
+<input placeholder="Enter language" bind="jobinfo.JobLang" />
+<button onclick="@SaveNew">Save</button>
+
+@code
+{
+
+    List<JobInfo> jobs = new List<JobInfo>();
+
+    public void SaveNew()
+    {
+
+        jobs.Add(new JobInfo
+            {
+                JobTitle = JobInfo.JobTitle,
+                SourceDir = newSourceDir,
+                DestDir = newDestDir,
+                JobLang = newJobLang
+            });
+
+        JobsService.SaveJobs(jobs);
+        NavManager.NavigateTo("/managejobs");
+
+    }
+}

@@ -1,12 +1,14 @@
 ﻿@page "/managejobs"
 @using EasyPolicheck.Data;
+@using System.Text.Json;
+@using System.Text.Json.Nodes;
 @inject JobsService JobsService
 @inject NavigationManager NavManager
 
 
 <h2>Manage Jobs</h2>
 
-@if (jobs == null || jobs.Count() ==0 )
+@if (jobsRender == null || jobsRender.Count() == 0)
 {
     <p><em>No jobs found...</em></p>
 }
@@ -22,7 +24,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var job in jobs )
+            @foreach (var job in jobsRender)
             {
                 <tr>
                     <td>@job.JobTitle</td>
@@ -34,19 +36,39 @@ else
         </tbody>
     </table>
 }
+
 <button class="btn btn-primary" onclick="window.location.href='/addjob'">Add Job</button>
 
 @code {
 
-    public List<JobInfo> jobs= new List<JobInfo>();
+    public List<JobInfo> jobsRender = new List<JobInfo>();
+    public JsonArray jobsList = new JsonArray();
+
     protected override void OnInitialized()
     {
-        var jobsList = JobsService.LoadJobs();
-        jobs.AddRange(jobsList);
+        jobsList = JobsService.LoadJobs();
+
+        foreach (var jobNode in jobsList)
+        {
+            var job = new JobInfo
+                {
+                    JobTitle = jobNode["JobTitle"].ToString(),
+                    SourceDir = jobNode["SourceDir"].ToString(),
+                    DestDir = jobNode["DestDir"].ToString(),
+                    JobLang = jobNode["JobLang"].ToString()
+                };
+
+            jobsRender.Add(job);
+        }
+
+        //jobsRender = JsonNode.Parse(jobsList.AsArray());
+        //jobsRender = JsonNode.Parse(jobsList);
+
+        //var jobsRender = jobs.AddRange(jobs);
     }
 
     protected void OnAfterRender()
     {
-   @*      var jobs = JobsService.LoadJobs(); *@
+        @* var jobs = JobsService.LoadJobs(); *@
     }
 }

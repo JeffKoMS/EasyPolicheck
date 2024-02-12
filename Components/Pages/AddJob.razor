@@ -1,5 +1,7 @@
 @page "/addjob"
 @using EasyPolicheck.Data;
+@using System.Text.Json;
+@using System.Text.Json.Nodes;
 @inject JobsService JobsService
 @inject NavigationManager NavManager
 
@@ -16,7 +18,7 @@
 @code
 {
 
-    public List<JobInfo> jobs = new List<JobInfo>();
+    public JsonArray jobList = new JsonArray();
     string? newJobTitle;
     string? newSourceDir;
     string? newDestDir;
@@ -24,8 +26,8 @@
 
     public void SaveNew()
     {
-        var fullJobs = JobsService.LoadJobs();
-        jobs.Add(new JobInfo
+        jobList = JsonSerializer.Deserialize<JsonArray>(JobsService.LoadJobs());
+        jobList.Add(new JobInfo
             {
                 JobTitle = newJobTitle,
                 SourceDir = newSourceDir,
@@ -33,9 +35,7 @@
                 JobLang = newJobLang
             });
 
-        jobs.AddRange(fullJobs);
-
-        JobsService.SaveJobs(jobs);
+        JobsService.SaveJobs(jobList);
         NavManager.NavigateTo("/managejobs");
 
     }

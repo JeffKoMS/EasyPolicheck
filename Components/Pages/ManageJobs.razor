@@ -6,7 +6,7 @@
 
 <h2>Manage Jobs</h2>
 
-@if (jobs == null)
+@if (jobs == null || jobs.Count() ==0 )
 {
     <p><em>No jobs found...</em></p>
 }
@@ -22,7 +22,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var job in jobs)
+            @foreach (var job in jobs )
             {
                 <tr>
                     <td>@job.JobTitle</td>
@@ -38,14 +38,15 @@ else
 
 @code {
 
-    public JobInfo[] jobs;
+    public List<JobInfo> jobs= new List<JobInfo>();
     protected override void OnInitialized()
     {
-        var jobs = JobsService.LoadJobs();
+        var jobsList = JobsService.LoadJobs();
+        jobs.AddRange(jobsList);
     }
 
     protected void OnAfterRender()
     {
-        var jobs = JobsService.LoadJobs();
+   @*      var jobs = JobsService.LoadJobs(); *@
     }
 }

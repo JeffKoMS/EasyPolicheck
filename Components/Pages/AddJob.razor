@@ -7,27 +7,33 @@
 
 <h3>Job information</h3>
 
-<input placeholder="Enter a title for this job" bind="jobinfo.JobTitle" />
-<input placeholder="Select source directory" bind="jobinfo.SourceDir" />
-<input placeholder="Select destination directory" bind="jobinfo.DestDir" />
-<input placeholder="Enter language" bind="jobinfo.JobLang" />
+<input placeholder="Enter a title for this job" @bind="newJobTitle" />
+<input placeholder="Select source directory" @bind="newSourceDir" />
+<input placeholder="Select destination directory" @bind="newDestDir" />
+<input placeholder="Enter language" @bind="newJobLang" />
 <button onclick="@SaveNew">Save</button>
 
 @code
 {
 
-    List<JobInfo> jobs = new List<JobInfo>();
+    public List<JobInfo> jobs = new List<JobInfo>();
+    string? newJobTitle;
+    string? newSourceDir;
+    string? newDestDir;
+    string? newJobLang;
 
     public void SaveNew()
     {
-
+        var fullJobs = JobsService.LoadJobs();
         jobs.Add(new JobInfo
             {
-                JobTitle = JobInfo.JobTitle,
+                JobTitle = newJobTitle,
                 SourceDir = newSourceDir,
                 DestDir = newDestDir,
                 JobLang = newJobLang
             });
+
+        jobs.AddRange(fullJobs);
 
         JobsService.SaveJobs(jobs);
         NavManager.NavigateTo("/managejobs");

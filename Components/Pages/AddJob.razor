@@ -5,20 +5,19 @@
 @inject JobsService JobsService
 @inject NavigationManager NavManager
 
-<p>Nothing to see here yet.</p>
+<h3>New job information</h3>
 
-<h3>Job information</h3>
-
-<input placeholder="Enter a title for this job" @bind="newJobTitle" />
-<input placeholder="Select source directory" @bind="newSourceDir" />
-<input placeholder="Select destination directory" @bind="newDestDir" />
-<input placeholder="Enter language" @bind="newJobLang" />
+<input placeholder="Enter a title for this job" @bind-value="jobInfo.JobTitle" />
+<input placeholder="Select source directory" @bind-value="jobInfo.SourceDir" />
+<input placeholder="Select destination directory" @bind-value="jobInfo.DestDir" />
+<input placeholder="Enter language" @bind-value="jobInfo.JobLang" />
 <button onclick="@SaveNew">Save</button>
 
 @code
 {
 
     public JsonArray jobList = new JsonArray();
+    public JobInfo jobInfo = new JobInfo();
     string? newJobTitle;
     string? newSourceDir;
     string? newDestDir;
@@ -27,7 +26,7 @@
     public void SaveNew()
     {
         jobList = JsonSerializer.Deserialize<JsonArray>(JobsService.LoadJobs());
-        jobList.Add(new JobInfo
+        jobList.Add( new JobInfo
             {
                 JobTitle = newJobTitle,
                 SourceDir = newSourceDir,

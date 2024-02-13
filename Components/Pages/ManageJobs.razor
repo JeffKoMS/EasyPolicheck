@@ -2,13 +2,14 @@
 @using EasyPolicheck.Data;
 @using System.Text.Json;
 @using System.Text.Json.Nodes;
+@using System.Linq;
 @inject JobsService JobsService
 @inject NavigationManager NavManager
 
 
 <h2>Manage Jobs</h2>
-
-@if (jobsRender == null || jobsRender.Count() == 0)
+@* @if (jobsRender == null || jobsRender.Count() == 0) *@
+@if (JobsInfo == null)
 {
     <p><em>No jobs found...</em></p>
 }
@@ -17,6 +18,7 @@ else
     <table class="table">
         <thead>
             <tr>
+                @* <th>Index</th> *@
                 <th>Title</th>
                 <th>Source Dir</th>
                 <th>Destination Dir</th>
@@ -24,15 +26,26 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var job in jobsRender)
+            @foreach (var job in JobsInfo)
             {
                 <tr>
+                    @* <td>@job.IndexOf(job)</td> *@
                     <td>@job.JobTitle</td>
                     <td>@job.SourceDir</td>
                     <td>@job.DestDir</td>
                     <td>@job.JobLang</td>
                 </tr>
             }
+            @* @foreach (var job in jobsRender)
+        {
+        <tr>
+        <td>@job.IndexOf(job)</td>
+        <td>@job.JobTitle</td>
+        <td>@job.SourceDir</td>
+        <td>@job.DestDir</td>
+        <td>@job.JobLang</td>
+        </tr>
+        }*@
         </tbody>
     </table>
 }
@@ -41,29 +54,34 @@ else
 
 @code {
 
-    public List<JobInfo> jobsRender = new List<JobInfo>();
-    public JsonArray jobsList = new JsonArray();
+    @* public List<JobInfo> jobsRender = new List<JobInfo>();
+    public JsonArray jobsList = new JsonArray(); *@
+
+    public IEnumerable<JobInfo>? JobsInfo { get; set; }
 
     protected override void OnInitialized()
     {
-        jobsList = JobsService.LoadJobs();
+        JobsInfo = JobsService.LoadJobs2();
+        Console.WriteLine(JobsInfo.Count());
 
-        foreach (var jobNode in jobsList)
-        {
-            var nodeLoop = new JobInfo
-                {
-                    JobTitle = jobNode["JobTitle"].ToString(),
-                    SourceDir = jobNode["SourceDir"].ToString(),
-                    DestDir = jobNode["DestDir"].ToString(),
-                    JobLang = jobNode["JobLang"].ToString()
-                };
+        @* jobsList = JobsService.LoadJobs();
 
-            jobsRender.Add(nodeLoop);
-        }
+foreach (var jobNode in jobsList)
+{
+var nodeLoop = new JobInfo
+{
+JobTitle = jobNode["JobTitle"].ToString(),
+SourceDir = jobNode["SourceDir"].ToString(),
+DestDir = jobNode["DestDir"].ToString(),
+JobLang = jobNode["JobLang"].ToString()
+};
+
+jobsRender.Add(nodeLoop);
+} *@
     }
 
     protected void OnAfterRender()
     {
-        
+
     }
 }

@@ -9,48 +9,62 @@
 
 <div>
     <label>Job title: </label>
-    <input placeholder="Enter a title for this job" @bind="newJobTitle" />
+    <input placeholder="Enter a title for this job" @bind="jobInfo.JobTitle" />
 </div>
 <div>
     <label>Source folder </label>
-    <input placeholder="Select source directory" @bind="newSourceDir" />
+    <input placeholder="Select source directory" @bind="jobInfo.SourceDir" />
 </div>
 <div>
     <label>Output folder: </label>
-    <input placeholder="Select an output directory" @bind="newDestDir" />
+    <input placeholder="Select an output directory" @bind="jobInfo.DestDir" />
 </div>
 <div>
     <label>Select job language </label>
-    <input placeholder="Enter language" @bind="newJobLang" />
+    <input placeholder="Enter language" @bind="jobInfo.JobLang" />
 </div>
 
 
 
-<button onclick="@SaveNew">Save</button>
+<button onclick="SaveNew">Save</button>
 
 @code
 {
 
-    public JsonArray jobList = new JsonArray();
-    public JobInfo jobInfo = new JobInfo();
-    string? newJobTitle;
+    public JobInfo? jobInfo { get; set; }
+    public IEnumerable<JobInfo>? JobsInfo { get; set; }
+
+ @*    string? newJobTitle {get; set; };
     string? newSourceDir;
     string? newDestDir;
-    string? newJobLang;
+    string? newJobLang; *@
+
+    @* public JsonArray jobList = new JsonArray();
+public JobInfo jobInfo = new JobInfo();
+*@
+
+    protected override void OnInitialized()
+    {
+        JobsInfo = JobsService.LoadJobs2();
+        Console.WriteLine(JobsInfo.Count());
+    }
 
     public void SaveNew()
     {
-        jobList = JsonSerializer.Deserialize<JsonArray>(JobsService.LoadJobs());
-        jobList.Add(new JobInfo
-            {
-                JobTitle = newJobTitle,
-                SourceDir = newSourceDir,
-                DestDir = newDestDir,
-                JobLang = newJobLang
-            });
+        Console.WriteLine(jobInfo.JobTitle);
 
-        JobsService.SaveJobs(jobList);
-        NavManager.NavigateTo("/managejobs");
+
+        @* jobList = JsonSerializer.Deserialize<JsonArray>(JobsService.LoadJobs());
+jobList.Add(new JobInfo
+{
+JobTitle = newJobTitle,
+SourceDir = newSourceDir,
+DestDir = newDestDir,
+JobLang = newJobLang
+});
+
+JobsService.SaveJobs(jobList);
+NavManager.NavigateTo("/managejobs"); *@
 
     }
 }

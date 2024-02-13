@@ -34,8 +34,15 @@ public class JobsService
         {
             return new JsonArray();
         }
+    }
 
+    public IEnumerable<JobInfo> LoadJobs2()
+    {
+        if (!File.Exists(jobsFile))
+            return Enumerable.Empty<JobInfo>();
 
+        var itemJson = File.ReadAllText(jobsFile);
+        return JsonSerializer.Deserialize<IEnumerable<JobInfo>>(itemJson) ?? Enumerable.Empty<JobInfo>();
     }
 
 }

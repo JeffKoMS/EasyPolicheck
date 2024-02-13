@@ -7,10 +7,25 @@
 
 <h3>New job information</h3>
 
-<input placeholder="Enter a title for this job" @bind-value="jobInfo.JobTitle" />
-<input placeholder="Select source directory" @bind-value="jobInfo.SourceDir" />
-<input placeholder="Select destination directory" @bind-value="jobInfo.DestDir" />
-<input placeholder="Enter language" @bind-value="jobInfo.JobLang" />
+<div>
+    <label>Job title: </label>
+    <input placeholder="Enter a title for this job" @bind="newJobTitle" />
+</div>
+<div>
+    <label>Source folder </label>
+    <input placeholder="Select source directory" @bind="newSourceDir" />
+</div>
+<div>
+    <label>Output folder: </label>
+    <input placeholder="Select an output directory" @bind="newDestDir" />
+</div>
+<div>
+    <label>Select job language </label>
+    <input placeholder="Enter language" @bind="newJobLang" />
+</div>
+
+
+
 <button onclick="@SaveNew">Save</button>
 
 @code
@@ -26,7 +41,7 @@
     public void SaveNew()
     {
         jobList = JsonSerializer.Deserialize<JsonArray>(JobsService.LoadJobs());
-        jobList.Add( new JobInfo
+        jobList.Add(new JobInfo
             {
                 JobTitle = newJobTitle,
                 SourceDir = newSourceDir,

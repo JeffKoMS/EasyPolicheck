@@ -50,7 +50,7 @@ else
 
         foreach (var jobNode in jobsList)
         {
-            var job = new JobInfo
+            var nodeLoop = new JobInfo
                 {
                     JobTitle = jobNode["JobTitle"].ToString(),
                     SourceDir = jobNode["SourceDir"].ToString(),
@@ -58,12 +58,12 @@ else
                     JobLang = jobNode["JobLang"].ToString()
                 };
 
-            jobsRender.Add(job);
+            jobsRender.Add(nodeLoop);
         }
     }
 
     protected void OnAfterRender()
     {
-        @* var jobs = JobsService.LoadJobs(); *@
+        
     }
 }

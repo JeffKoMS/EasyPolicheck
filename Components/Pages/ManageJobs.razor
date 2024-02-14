@@ -18,6 +18,7 @@ else
     <table class="table">
         <thead>
             <tr>
+                <th>Id</th>
                 <th>Title</th>
                 <th>Source Dir</th>
                 <th>Destination Dir</th>
@@ -28,6 +29,7 @@ else
             @foreach (var job in JobsInfo)
             {
                 <tr>
+                    <td>@job.Id</td>
                     <td>@job.JobTitle</td>
                     <td>@job.SourceDir</td>
                     <td>@job.DestDir</td>

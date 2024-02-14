@@ -6,7 +6,6 @@ using System.Text.Json.Nodes;
 public class JobsService
 {
     string jobsFile = string.Empty;
-    public JsonArray jsonArray = new JsonArray();
 
     public JobsService()
     {

@@ -8,7 +8,7 @@
 
 
 <h2>Manage Jobs</h2>
-@* @if (jobsRender == null || jobsRender.Count() == 0) *@
+
 @if (JobsInfo == null)
 {
     <p><em>No jobs found...</em></p>
@@ -18,7 +18,6 @@ else
     <table class="table">
         <thead>
             <tr>
-                @* <th>Index</th> *@
                 <th>Title</th>
                 <th>Source Dir</th>
                 <th>Destination Dir</th>
@@ -29,7 +28,6 @@ else
             @foreach (var job in JobsInfo)
             {
                 <tr>
-                    @* <td>@IndexOf(JobsInfo)</td> *@
                     <td>@job.JobTitle</td>
                     <td>@job.SourceDir</td>
                     <td>@job.DestDir</td>

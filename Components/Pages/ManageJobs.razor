@@ -29,23 +29,13 @@ else
             @foreach (var job in JobsInfo)
             {
                 <tr>
-                    @* <td>@job.IndexOf(job)</td> *@
+                    @* <td>@IndexOf(JobsInfo)</td> *@
                     <td>@job.JobTitle</td>
                     <td>@job.SourceDir</td>
                     <td>@job.DestDir</td>
                     <td>@job.JobLang</td>
                 </tr>
             }
-            @* @foreach (var job in jobsRender)
-        {
-        <tr>
-        <td>@job.IndexOf(job)</td>
-        <td>@job.JobTitle</td>
-        <td>@job.SourceDir</td>
-        <td>@job.DestDir</td>
-        <td>@job.JobLang</td>
-        </tr>
-        }*@
         </tbody>
     </table>
 }
@@ -53,31 +43,13 @@ else
 <button class="btn btn-primary" onclick="window.location.href='/addjob'">Add Job</button>
 
 @code {
-
-    @* public List<JobInfo> jobsRender = new List<JobInfo>();
-    public JsonArray jobsList = new JsonArray(); *@
-
-    public IEnumerable<JobInfo>? JobsInfo { get; set; }
+    List<JobInfo> JobsInfo = new List<JobInfo>();
 
     protected override void OnInitialized()
     {
-        JobsInfo = JobsService.LoadJobs2();
-        Console.WriteLine(JobsInfo.Count());
+        var jobs = JobsService.LoadJobs();
+        JobsInfo.AddRange(jobs);
 
-        @* jobsList = JobsService.LoadJobs();
-
-foreach (var jobNode in jobsList)
-{
-var nodeLoop = new JobInfo
-{
-JobTitle = jobNode["JobTitle"].ToString(),
-SourceDir = jobNode["SourceDir"].ToString(),
-DestDir = jobNode["DestDir"].ToString(),
-JobLang = jobNode["JobLang"].ToString()
-};
-
-jobsRender.Add(nodeLoop);
-} *@
     }
 
     protected void OnAfterRender()

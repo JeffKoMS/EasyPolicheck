@@ -13,30 +13,12 @@ public class JobsService
         jobsFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "jobs.json");
     }
 
-    public void SaveJobs(JsonArray jobs)
+    public void SaveJobs(IEnumerable<JobInfo> jobs)
     {
         File.WriteAllText(jobsFile, JsonSerializer.Serialize(jobs));
     }
 
-    public JsonArray LoadJobs()
-    {
-        if (!File.Exists(jobsFile))
-            return new JsonArray();
-
-        var itemJson = File.ReadAllText(jobsFile);
-
-        try
-        {
-            var deserializedJobs = JsonSerializer.Deserialize<JsonArray>(itemJson);
-            return deserializedJobs;
-        }
-        catch
-        {
-            return new JsonArray();
-        }
-    }
-
-    public IEnumerable<JobInfo> LoadJobs2()
+    public IEnumerable<JobInfo> LoadJobs()
     {
         if (!File.Exists(jobsFile))
             return Enumerable.Empty<JobInfo>();

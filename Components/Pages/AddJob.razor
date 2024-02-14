@@ -2,6 +2,7 @@
 @using EasyPolicheck.Data;
 @using System.Text.Json;
 @using System.Text.Json.Nodes;
+@using System.Linq;
 @inject JobsService JobsService
 @inject NavigationManager NavManager
 
@@ -9,62 +10,54 @@
 
 <div>
     <label>Job title: </label>
-    <input placeholder="Enter a title for this job" @bind="jobInfo.JobTitle" />
+    <input placeholder="Enter a title for this job" @bind="newJobTitle" />
 </div>
 <div>
     <label>Source folder </label>
-    <input placeholder="Select source directory" @bind="jobInfo.SourceDir" />
+    <input placeholder="Select source directory" @bind="newSourceDir" />
 </div>
 <div>
     <label>Output folder: </label>
-    <input placeholder="Select an output directory" @bind="jobInfo.DestDir" />
+    <input placeholder="Select an output directory" @bind="newDestDir" />
 </div>
 <div>
     <label>Select job language </label>
-    <input placeholder="Enter language" @bind="jobInfo.JobLang" />
+    <input placeholder="Enter language" @bind="newJobLang" />
 </div>
 
 
 
-<button onclick="SaveNew">Save</button>
+<button @onclick="SaveNew">Save</button>
 
-@code
-{
+@code {
+    
+    List<JobInfo> JobsInfo = new List<JobInfo>();
 
-    public JobInfo? jobInfo { get; set; }
-    public IEnumerable<JobInfo>? JobsInfo { get; set; }
-
- @*    string? newJobTitle {get; set; };
+    string? newJobTitle;
     string? newSourceDir;
     string? newDestDir;
-    string? newJobLang; *@
-
-    @* public JsonArray jobList = new JsonArray();
-public JobInfo jobInfo = new JobInfo();
-*@
+    string? newJobLang;
 
     protected override void OnInitialized()
     {
-        JobsInfo = JobsService.LoadJobs2();
-        Console.WriteLine(JobsInfo.Count());
+        var jobs = JobsService.LoadJobs();
+        JobsInfo.AddRange(jobs);
+
     }
 
     public void SaveNew()
     {
-        Console.WriteLine(jobInfo.JobTitle);
-
-
-        @* jobList = JsonSerializer.Deserialize<JsonArray>(JobsService.LoadJobs());
-jobList.Add(new JobInfo
-{
-JobTitle = newJobTitle,
-SourceDir = newSourceDir,
-DestDir = newDestDir,
-JobLang = newJobLang
-});
-
-JobsService.SaveJobs(jobList);
-NavManager.NavigateTo("/managejobs"); *@
-
+        JobsInfo.Add(new JobInfo
+            {
+                JobTitle = newJobTitle,
+                SourceDir = newSourceDir,
+                DestDir = newDestDir,
+                JobLang = newJobLang
+            }
+        );
+        JobsService.SaveJobs(JobsInfo);
+        @* JobsInfo.RemoveAt(3); Just a test*@
+        NavManager.NavigateTo("/managejobs");
     }
+
 }

@@ -9,7 +9,7 @@
 
 <h2>Manage Jobs</h2>
 
-@if (JobsInfo == null)
+@if (JobsInfo == null || JobsInfo.Count() == 0)
 {
     <p><em>No jobs found...</em></p>
 }

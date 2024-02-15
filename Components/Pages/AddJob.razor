@@ -8,39 +8,47 @@
 
 <h3>New job information</h3>
 
-<div>
-    <label>Job title: </label>
-    <input placeholder="Enter a title for this job" @bind="newJobTitle" />
-</div>
-<div>
-    <label>Source folder </label>
-    <input placeholder="Select source directory" @bind="newSourceDir" />
-</div>
-<div>
-    <label>Output folder: </label>
-    <input placeholder="Select an output directory" @bind="newDestDir" />
-</div>
-<div>
-    <label>Select job language </label>
-    <input placeholder="Enter language" @bind="newJobLang" />
-</div>
+<form>
+    <div class="form-group">
+        <label>Job title: </label>
+        <input type="text" class="form-control" placeholder="Enter a title for this job" @bind="newJobTitle" />
+    </div>
+    <div class="form-group">
+        <label>Source folder </label>
+        <input placeholder="Select source directory" @bind="newSourceDir" />
+    </div>
+    <div class="form-group">
+        <label>Output folder: </label>
+        <input placeholder="Select an output directory" @bind="newDestDir" />
+    </div>
+    <div class="form-group">
+        <label>Select language: </label>
+        <select @bind="newJobLang">
+            @foreach (var lang in culture)
+            {
+                <option value="@lang">@lang</option>
+            }
+        </select>
+    </div>
+</form>
 
 
 
-<button @onclick="SaveNew">Save</button>
+<button class="btn btn-primary" @onclick="SaveNew">Save</button>
 
 @code {
-    
+
     List<JobInfo> JobsInfo = new List<JobInfo>();
 
-    string? newId;
     string? newJobTitle;
     string? newSourceDir;
     string? newDestDir;
-    string? newJobLang;
+    string? newJobLang = "en-US";
+    IList<string> culture = new List<string> { "en-US", "es-ES", "de-DE", "zh-TW" };
 
     protected override void OnInitialized()
     {
+        Console.WriteLine(NavManager.Uri);
         var jobs = JobsService.LoadJobs();
         JobsInfo.AddRange(jobs);
 

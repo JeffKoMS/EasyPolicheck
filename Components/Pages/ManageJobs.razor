@@ -16,35 +16,34 @@
 else
 {
     <table class="table">
-        <thead>
+        <thead class="thead-dark">
             <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Source Dir</th>
-                <th>Destination Dir</th>
-                <th>Language</th>
+                <th scope="col">Title</th>
+                <th scope="col">Source Dir</th>
+                <th scope="col">Destination Dir</th>
+                <th scope="col">Language</th>
+                <th scope="col">Manage</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var job in JobsInfo)
             {
                 <tr>
-                    <td>@job.Id</td>
                     <td>@job.JobTitle</td>
                     <td>@job.SourceDir</td>
                     <td>@job.DestDir</td>
                     <td>@job.JobLang</td>
+                    <td><button class="btn btn-primary" @onclick="@(() => NavMe("editjob", job.Id))">Edit</button></td>
                 </tr>
             }
         </tbody>
     </table>
 }
 
-<button class="btn btn-primary" onclick="window.location.href='/addjob'">Add Job</button>
+<button class="btn btn-primary" @onclick="@(() => NavMe("addjob", null))">Add Job</button>
 
 @code {
     List<JobInfo> JobsInfo = new List<JobInfo>();
-
     protected override void OnInitialized()
     {
         var jobs = JobsService.LoadJobs();
@@ -55,5 +54,17 @@ else
     protected void OnAfterRender()
     {
 
+    }
+
+    public void NavMe(string url, string? rId)
+    {
+        if (rId == null)
+        {
+            NavManager.NavigateTo(url);
+        }
+        else
+        {
+            NavManager.NavigateTo(url + "/" + rId);
+        }
     }
 }

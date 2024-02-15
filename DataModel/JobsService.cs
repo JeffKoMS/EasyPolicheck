@@ -1,7 +1,6 @@
 namespace EasyPolicheck.Data;
 
 using System.Text.Json;
-using System.Text.Json.Nodes;
 
 public class JobsService
 {

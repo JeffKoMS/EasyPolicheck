@@ -1,4 +1,5 @@
 @page "/editjob"
+@page "/editjob/{EditId}"
 @using EasyPolicheck.Data;
 @using System.Text.Json;
 @using System.Text.Json.Nodes;
@@ -6,23 +7,23 @@
 @inject JobsService JobsService
 @inject NavigationManager NavManager
 
-<h3>New job information</h3>
+<h3>Edit job information</h3>
 
 <div>
     <label>Job title: </label>
-    <input placeholder="Enter a title for this job" @bind="newJobTitle" />
+    <input  @bind="newJobTitle" />
 </div>
 <div>
     <label>Source folder </label>
-    <input placeholder="Select source directory" @bind="newSourceDir" />
+    <input  @bind="newSourceDir" />
 </div>
 <div>
     <label>Output folder: </label>
-    <input placeholder="Select an output directory" @bind="newDestDir" />
+    <input  @bind="newDestDir" />
 </div>
 <div>
     <label>Select job language </label>
-    <input placeholder="Enter language" @bind="newJobLang" />
+    <input  @bind="newJobLang" />
 </div>
 
 
@@ -30,7 +31,9 @@
 <button @onclick="SaveNew">Save</button>
 
 @code {
-    
+
+    [Parameter]
+    public string? EditId { get; set; }
     List<JobInfo> JobsInfo = new List<JobInfo>();
 
     string? newJobTitle;
@@ -58,6 +61,18 @@
         JobsService.SaveJobs(JobsInfo);
         @* JobsInfo.RemoveAt(3); Just a test*@
         NavManager.NavigateTo("/managejobs");
+    }
+
+    public void NavMe(string url, params string[] rId)
+    {
+        if (rId != null)
+        {
+            NavManager.NavigateTo(url);
+        }
+        else
+        {
+            NavManager.NavigateTo(url + rId);
+        }
     }
 
 }

@@ -15,26 +15,16 @@
     </div>
     <div class="form-group">
         <label>Source folder </label>
-        <input placeholder="Select source directory" @bind="newSourceDir" />
+        <input type="text" class="form-control" placeholder="Select source directory" @bind="newSourceDir" />
     </div>
     <div class="form-group">
         <label>Output folder: </label>
-        <input placeholder="Select an output directory" @bind="newDestDir" />
+        <input type="text" class="form-control" placeholder="Select an output directory" @bind="newDestDir" />
     </div>
-    <div class="form-group">
-        <label>Select language: </label>
-        <select @bind="newJobLang">
-            @foreach (var lang in culture)
-            {
-                <option value="@lang">@lang</option>
-            }
-        </select>
+    <div class="form-group mx-4">
+        <button class="btn btn-primary" @onclick="SaveNew">Save</button>
     </div>
 </form>
-
-
-
-<button class="btn btn-primary" @onclick="SaveNew">Save</button>
 
 @code {
 
@@ -44,11 +34,9 @@
     string? newSourceDir;
     string? newDestDir;
     string? newJobLang = "en-US";
-    IList<string> culture = new List<string> { "en-US", "es-ES", "de-DE", "zh-TW" };
 
     protected override void OnInitialized()
     {
-        Console.WriteLine(NavManager.Uri);
         var jobs = JobsService.LoadJobs();
         JobsInfo.AddRange(jobs);
 
@@ -66,8 +54,20 @@
             }
         );
         JobsService.SaveJobs(JobsInfo);
-        @* JobsInfo.RemoveAt(3); Just a test*@
-        NavManager.NavigateTo("/managejobs");
+        NavManager.NavigateTo("managejobs");
+        @* NavMe("managejobs", null); *@
+    }
+
+    public void NavMe(string url, string? rId)
+    {
+        if (rId == null)
+        {
+            NavManager.NavigateTo(url);
+        }
+        else
+        {
+            NavManager.NavigateTo(url + rId);
+        }
     }
 
 }

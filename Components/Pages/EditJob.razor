@@ -2,7 +2,6 @@
 @page "/editjob/{EditId}"
 @using EasyPolicheck.Data;
 @using System.Text.Json;
-@using System.Text.Json.Nodes;
 @using System.Linq;
 @inject JobsService JobsService
 @inject NavigationManager NavManager
@@ -11,61 +10,74 @@
 
 <div>
     <label>Job title: </label>
-    <input  @bind="newJobTitle" />
+    <input @bind="newJobTitle" />
 </div>
 <div>
     <label>Source folder </label>
-    <input  @bind="newSourceDir" />
+    <input @bind="newSourceDir" />
 </div>
 <div>
     <label>Output folder: </label>
-    <input  @bind="newDestDir" />
-</div>
-<div>
-    <label>Select job language </label>
-    <input  @bind="newJobLang" />
+    <input @bind="newDestDir" />
 </div>
 
 
 
-<button @onclick="SaveNew">Save</button>
+
+<button @onclick="SaveUpdate">Save</button>
 
 @code {
 
     [Parameter]
     public string? EditId { get; set; }
-    List<JobInfo> JobsInfo = new List<JobInfo>();
+
+
 
     string? newJobTitle;
     string? newSourceDir;
     string? newDestDir;
-    string? newJobLang;
+    string? newJobLang = "en-US";
+
+    List<JobInfo> JobsInfo = new List<JobInfo>();
 
     protected override void OnInitialized()
     {
         var jobs = JobsService.LoadJobs();
         JobsInfo.AddRange(jobs);
 
+        foreach (var editItem in JobsInfo)
+        {
+            if (editItem.Id == EditId)
+            {
+                newJobTitle = editItem.JobTitle;
+                newSourceDir = editItem.SourceDir;
+                newDestDir = editItem.DestDir;
+            }
+        }
     }
 
-    public void SaveNew()
+
+
+    public void SaveUpdate()
     {
-        JobsInfo.Add(new JobInfo
+        foreach (var editItem in JobsInfo)
+        {
+            if (editItem.Id == EditId)
             {
-                JobTitle = newJobTitle,
-                SourceDir = newSourceDir,
-                DestDir = newDestDir,
-                JobLang = newJobLang
+                editItem.JobTitle = newJobTitle;
+                editItem.SourceDir = newSourceDir;
+                editItem.DestDir = newDestDir;
             }
-        );
+        }
+        
         JobsService.SaveJobs(JobsInfo);
         @* JobsInfo.RemoveAt(3); Just a test*@
-        NavManager.NavigateTo("/managejobs");
+        NavMe("managejobs", null);
     }
 
-    public void NavMe(string url, params string[] rId)
+    public void NavMe(string url, string? rId)
     {
-        if (rId != null)
+        if (rId == null)
         {
             NavManager.NavigateTo(url);
         }

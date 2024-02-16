@@ -18,15 +18,15 @@ else
         <thead class="thead-dark">
             <tr>
                 <th class="text-center">Title</th>
-                <th class="text-center">Source Dir</th>
-                <th class="text-center">Destination Dir</th>
+                <th class="text-center">Source</th>
+                <th class="text-center">Destination</th>
                 <th class="text-center">Manage</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var job in JobsInfo)
             {
-                <tr>
+                <tr style="vertical-align: middle">
                     <td>@job.JobTitle</td>
                     <td>@job.SourceDir</td>
                     <td>@job.DestDir</td>

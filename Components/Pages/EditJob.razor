@@ -3,26 +3,47 @@
 @using EasyPolicheck.Data;
 @using System.Text.Json;
 @using System.Linq;
+@using CommunityToolkit.Maui.Storage;
 @inject JobsService JobsService
 @inject NavigationManager NavManager
 
 <h3>Edit job information</h3>
 
-<div>
-    <label>Job title: </label>
-    <input @bind="newJobTitle" />
-</div>
-<div>
-    <label>Source folder </label>
-    <input @bind="newSourceDir" />
-</div>
-<div class="mb-3">
-    <label>Output folder: </label>
-    <input @bind="newDestDir" />
-</div>
-<div>
-    <button class="btn btn-primary" @onclick="SaveUpdate">Save</button>
-    <button class="btn btn-secondary mx-2" @onclick="@(() => goPage("managejobs", string.Empty))">Cancel</button>
+<div class="container" style="align:left">
+    <div class="row mb-4">
+        <div class="col-md">
+            <label><strong>Job title</strong></label>
+            <input type="text" class="form-control" @bind="newJobTitle" />
+        </div>
+        <div class="col-md">
+            &nbsp;
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md">
+            <label><strong>Source folder</strong></label>
+            <input disabled class="form-control" type="text"  @bind="newSourceDir" />
+        </div>
+        <div class="col-md mt-auto">
+            <button class="btn btn-primary" @onclick="@(() => browseFolder(true))">Browse</button>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md">
+            <label><strong>Output folder</strong></label>
+            <input disabled class="form-control" type="text" @bind="newDestDir" />
+        </div>
+        <div class="col-md mt-auto">
+            <button class="btn btn-primary" @onclick="@(() => browseFolder(false))">Browse</button>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div>
+            <button class="btn btn-primary" @onclick="SaveUpdate">Save</button>
+            <button class="btn btn-secondary mx-2"
+                @onclick="@(() => goPage("managejobs", string.Empty))">Cancel</button>
+        </div>
+    </div>
 </div>
 
 @code {
@@ -52,6 +73,28 @@
         }
     }
 
+    private async void browseFolder(bool temp)
+    {
+        var folder = await FolderPicker.PickAsync(default);
+        if (folder.IsSuccessful)
+        {
+            if (temp)
+            {
+                newSourceDir = folder.Folder.Path;
+                StateHasChanged();
+            }
+            else
+            {
+                newDestDir = folder.Folder.Path;
+                StateHasChanged();
+            }
+        }
+        else
+        {
+            //do something later
+        }
+    }
+
     public void SaveUpdate()
     {
         foreach (var editItem in JobsInfo)
@@ -65,7 +108,6 @@
         }
 
         JobsService.SaveJobs(JobsInfo);
-        @* JobsInfo.RemoveAt(3); Just a test*@
         goPage("managejobs", string.Empty);
     }
 

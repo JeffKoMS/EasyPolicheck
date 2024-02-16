@@ -61,16 +61,7 @@
             JobsInfo.Remove(delItem);
         }
         
-        @* foreach (var delItem in JobsInfo)
-        {
-            if (delItem.Id == EditId)
-            {
-                JobsInfo.Remove(delItem);
-            }
-        } *@
-        
         JobsService.SaveJobs(JobsInfo);
-        @* JobsInfo.RemoveAt(3); Just a test*@
         goPage("managejobs", string.Empty);
     }
 

@@ -3,7 +3,7 @@
 @using System.Text.Json;
 @using System.Linq;
 @inject JobsService JobsService
-@inject NavigationManager NavManager
+@inject NavigationManager NavigationManager
 
 
 <h2>Manage Jobs</h2>
@@ -31,8 +31,8 @@ else
                     <td>@job.SourceDir</td>
                     <td>@job.DestDir</td>
                     <td class="text-center" style="width:20%">
-                        <button class="btn btn-primary mx-2" @onclick="@(() => NavMe("editjob", job.Id))">Edit</button>
-                        <button class="btn btn-danger">Delete</button>
+                        <button class="btn btn-primary mx-2" @onclick="@(() => goPage("editjob", job.Id))">Edit</button>
+                        <button class="btn btn-danger" @onclick="@(() => goPage("deletejob", job.Id))">Delete</button>
                     </td>
                 </tr>
             }
@@ -40,7 +40,7 @@ else
     </table>
 }
 
-<button class="btn btn-primary" @onclick="@(() => NavMe("addjob", null))">Add Job</button>
+<button class="btn btn-primary" @onclick="@(() => goPage("addjob", string.Empty))">Add Job</button>
 
 @code {
     List<JobInfo> JobsInfo = new List<JobInfo>();
@@ -51,20 +51,15 @@ else
 
     }
 
-    protected void OnAfterRender()
+    private void goPage(string url, string rId)
     {
-
-    }
-
-    public void NavMe(string url, string? rId)
-    {
-        if (rId == null)
+        if (rId == string.Empty)
         {
-            NavManager.NavigateTo(url);
+            NavigationManager.NavigateTo(url);
         }
         else
         {
-            NavManager.NavigateTo(url + "/" + rId);
+            NavigationManager.NavigateTo(url + "/" + rId);
         }
     }
 

@@ -1,63 +1,89 @@
 @page "/deletejob"
+@page "/deletejob/{EditId}"
 @using EasyPolicheck.Data;
 @using System.Text.Json;
-@using System.Text.Json.Nodes;
 @using System.Linq;
 @inject JobsService JobsService
 @inject NavigationManager NavManager
 
-<h3>New job information</h3>
+<h3>Delete job</h3>
 
 <div>
     <label>Job title: </label>
-    <input placeholder="Enter a title for this job" @bind="newJobTitle" />
+    <input disabled @bind="delJobTitle" />
 </div>
 <div>
     <label>Source folder </label>
-    <input placeholder="Select source directory" @bind="newSourceDir" />
+    <input @bind="delSourceDir" />
 </div>
-<div>
+<div class="mb-3">
     <label>Output folder: </label>
-    <input placeholder="Select an output directory" @bind="newDestDir" />
-</div>
-<div>
-    <label>Select job language </label>
-    <input placeholder="Enter language" @bind="newJobLang" />
+    <input @bind="delDestDir" />
 </div>
 
 
 
-<button @onclick="SaveNew">Save</button>
+
+<button @onclick="DeleteSave">Delete</button>
 
 @code {
-    
-    List<JobInfo> JobsInfo = new List<JobInfo>();
 
-    string? newJobTitle;
-    string? newSourceDir;
-    string? newDestDir;
-    string? newJobLang;
+    [Parameter]
+    public string? EditId { get; set; }
+
+    string? delJobTitle;
+    string? delSourceDir;
+    string? delDestDir;
+
+    List<JobInfo> JobsInfo = new List<JobInfo>();
 
     protected override void OnInitialized()
     {
         var jobs = JobsService.LoadJobs();
         JobsInfo.AddRange(jobs);
 
+        foreach (var deleteItem in JobsInfo)
+        {
+            if (deleteItem.Id == EditId)
+            {
+                delJobTitle = deleteItem.JobTitle;
+                delSourceDir = deleteItem.SourceDir;
+                delDestDir = deleteItem.DestDir;
+            }
+        }
     }
 
-    public void SaveNew()
+    public void DeleteSave()
     {
-        JobsInfo.Add(new JobInfo
+        var delItem = JobsInfo.SingleOrDefault(r => r.Id == EditId);
+        if (delItem != null)
+        {
+            JobsInfo.Remove(delItem);
+        }
+        
+        @* foreach (var delItem in JobsInfo)
+        {
+            if (delItem.Id == EditId)
             {
-                JobTitle = newJobTitle,
-                SourceDir = newSourceDir,
-                DestDir = newDestDir,
-                JobLang = newJobLang
+                JobsInfo.Remove(delItem);
             }
-        );
+        } *@
+        
         JobsService.SaveJobs(JobsInfo);
         @* JobsInfo.RemoveAt(3); Just a test*@
-        NavManager.NavigateTo("/managejobs");
+        goPage("managejobs", string.Empty);
+    }
+
+    public void goPage(string url, string rId)
+    {
+        if (rId == string.Empty)
+        {
+            NavManager.NavigateTo(url);
+        }
+        else
+        {
+            NavManager.NavigateTo(url + rId);
+        }
     }
 
 }

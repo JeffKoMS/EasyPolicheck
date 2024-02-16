@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Storage;
 using EasyPolicheck.Data;
 
 namespace EasyPolicheck;
@@ -21,6 +22,7 @@ public static class MauiProgram
 
 		builder.Services.AddMauiBlazorWebView();
 		builder.Services.AddSingleton<JobsService>();
+		builder.Services.AddSingleton<IFolderPicker>(FolderPicker.Default);
 
 
 #if DEBUG

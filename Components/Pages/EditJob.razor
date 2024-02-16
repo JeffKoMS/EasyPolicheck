@@ -16,27 +16,23 @@
     <label>Source folder </label>
     <input @bind="newSourceDir" />
 </div>
-<div>
+<div class="mb-3">
     <label>Output folder: </label>
     <input @bind="newDestDir" />
 </div>
-
-
-
-
-<button @onclick="SaveUpdate">Save</button>
+<div>
+    <button class="btn btn-primary" @onclick="SaveUpdate">Save</button>
+    <button class="btn btn-secondary mx-2" @onclick="@(() => goPage("managejobs", string.Empty))">Cancel</button>
+</div>
 
 @code {
 
     [Parameter]
     public string? EditId { get; set; }
 
-
-
     string? newJobTitle;
     string? newSourceDir;
     string? newDestDir;
-    string? newJobLang = "en-US";
 
     List<JobInfo> JobsInfo = new List<JobInfo>();
 
@@ -56,8 +52,6 @@
         }
     }
 
-
-
     public void SaveUpdate()
     {
         foreach (var editItem in JobsInfo)
@@ -69,15 +63,15 @@
                 editItem.DestDir = newDestDir;
             }
         }
-        
+
         JobsService.SaveJobs(JobsInfo);
         @* JobsInfo.RemoveAt(3); Just a test*@
-        NavMe("managejobs", null);
+        goPage("managejobs", string.Empty);
     }
 
-    public void NavMe(string url, string? rId)
+    public void goPage(string url, string? rId)
     {
-        if (rId == null)
+        if (rId == string.Empty)
         {
             NavManager.NavigateTo(url);
         }

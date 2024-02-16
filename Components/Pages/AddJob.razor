@@ -22,7 +22,7 @@
     <div class="row mb-4">
         <div class="col-md">
             <label><strong>Source folder</strong></label>
-            <input class="form-control" type="text" placeholder="Select source directory" value="@newSourceDir" />
+            <input class="form-control" type="text" placeholder="Select source directory" @bind="@newSourceDir" @bind:after="browseFolder" />
         </div>
         <div class="col-md mt-auto">
             <button class="btn btn-primary" @onclick="browseFolder">Browse</button>

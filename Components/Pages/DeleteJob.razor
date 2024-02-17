@@ -14,27 +14,18 @@
             <label><strong>Job title</strong></label>
             <input diabled type="text" class="form-control" @bind="delJobTitle" />
         </div>
-        @* <div class="col-md">
-            &nbsp;
-        </div> *@
     </div>
     <div class="row mb-4">
         <div class="col-md">
             <label><strong>Source folder</strong></label>
             <input disabled class="form-control" type="text"  @bind="delSourceDir" />
         </div>
-        @* <div class="col-md mt-auto">
-            <button class="btn btn-primary" @onclick="@(() => browseFolder(true))">Browse</button>
-        </div> *@
     </div>
     <div class="row mb-4">
         <div class="col-md">
             <label><strong>Output folder</strong></label>
             <input disabled class="form-control" type="text" @bind="delDestDir" />
         </div>
-        @* <div class="col-md mt-auto">
-            <button class="btn btn-primary" @onclick="@(() => browseFolder(false))">Browse</button>
-        </div> *@
     </div>
     <div class="row mb-4">
         <div>
@@ -44,21 +35,6 @@
         </div>
     </div>
 </div>
-
-
-@* <div>
-    <label>Job title: </label>
-    <input disabled @bind="delJobTitle" />
-</div>
-<div>
-    <label>Source folder </label>
-    <input @bind="delSourceDir" />
-</div>
-<div class="mb-3">
-    <label>Output folder: </label>
-    <input @bind="delDestDir" />
-</div>
- *@
 
 @code {
 

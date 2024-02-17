@@ -25,7 +25,6 @@ else
     <div class="row row-cols-1 row-cols-md-3 g-4">
         @foreach (var job in JobsInfo)
         {
-
             <div class="col">
                 <div class="card" border-dark>
                     <div class="card-header">
@@ -52,42 +51,6 @@ else
     </div>
 }
 
-
-
-@* @if (JobsInfo == null || JobsInfo.Count() == 0)
-{
-<p><em>No jobs found...</em></p>
-}
-else
-{
-<table class="table table-bordered table-striped">
-<thead class="thead-dark">
-<tr>
-<th class="text-center">Title</th>
-<th class="text-center">Source</th>
-<th class="text-center">Destination</th>
-<th class="text-center">Manage</th>
-</tr>
-</thead>
-<tbody>
-@foreach (var job in JobsInfo)
-{
-<tr style="vertical-align: middle">
-<td>@job.JobTitle</td>
-<td style="font-size:10px">@job.SourceDir</td>
-<td style="font-size:10px">@job.DestDir</td>
-<td class="text-center" style="width:20%">
-<button class="btn btn-primary mx-2" @onclick="@(() => goPage("editjob", job.Id))">Edit</button>
-<button class="btn btn-danger" @onclick="@(() => goPage("deletejob", job.Id))">Delete</button>
-</td>
-</tr>
-}
-</tbody>
-</table>
-} *@
-
-
-
 @code {
     List<JobInfo> JobsInfo = new List<JobInfo>();
     public bool Collapsed;
@@ -96,11 +59,6 @@ else
         var jobs = JobsService.LoadJobs();
         JobsInfo.AddRange(jobs);
 
-    }
-
-    void Toggle()
-    {
-        Collapsed = !Collapsed;
     }
 
     private void goPage(string url, string rId)

@@ -5,8 +5,7 @@
 
 <div>
     @runStatus
-    <button class="btn btn-primary" >Browse</button>
-
+    <button class="btn btn-primary">Browse</button>
 </div>
 
 
@@ -18,25 +17,25 @@
     {
 
         @* if (firstRender)
-        {
-            string poliInstall = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
-            @"\policheck\tools\policheck.exe";
-            bool found = File.Exists(poliInstall);
+{
+string poliInstall = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
+@"\policheck\tools\policheck.exe";
+bool found = File.Exists(poliInstall);
 
-            if (File.Exists(poliInstall))
-            {
-                Console.WriteLine("File exists");
-            }
-            else
-            {
-                Console.WriteLine("Can't find");
-            }
-            firstRender = false;
+if (File.Exists(poliInstall))
+{
+Console.WriteLine("File exists");
+}
+else
+{
+Console.WriteLine("Can't find");
+}
+firstRender = false;
 
-        }
-        else
-        {
-            Console.WriteLine("Not first render");
-        } *@
-    } 
+}
+else
+{
+Console.WriteLine("Not first render");
+} *@
+    }
 }

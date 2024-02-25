@@ -2,5 +2,5 @@ namespace EasyPolicheck.Data;
 
 public class PolicheckLocation
 {
-    public string? Location { get; set; }
+    public string? PCLocation { get; set; }
 }

@@ -68,6 +68,7 @@
     <ItemGroup>
       <Folder Include="Helper\" />
       <Folder Include="Services\" />
+      <Folder Include="wwwroot\data\" />
     </ItemGroup>
 
 </Project>

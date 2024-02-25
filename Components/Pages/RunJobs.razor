@@ -16,20 +16,24 @@
 @code {
 
     public string? runStatus = "Verifying Policheck location";
-    public string? poliInstall = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
+    public string poliInstall = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
     @"\policheck\tools\Policheck.exe";
+
     List<JobInfo> JobsInfo = new List<JobInfo>();
     List<PolicheckLocation> LocationInfo = new List<PolicheckLocation>();
 
+
+
+
     protected override void OnInitialized()
     {
-        
+
         var jobs = JobsService.LoadJobs();
         JobsInfo.AddRange(jobs);
 
-        var pcLocation = PolicheckService.LoadLocation();
-        LocationInfo.AddRange(pcLocation);
-        
+        var poliLocation = PolicheckService.LoadLocation();
+        LocationInfo.AddRange(poliLocation);
+
         @* bool found = File.Exists(poliInstall); *@
         if (File.Exists(poliInstall))
         {
@@ -53,29 +57,3 @@
         }
     }
 }
-
-@* protected override void OnAfterRender(bool firstRender)
-{
-
-if (firstRender)
-{
-string poliInstall = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
-@"\policheck\tools\policheck.exe";
-bool found = File.Exists(poliInstall);
-
-if (File.Exists(poliInstall))
-{
-Console.WriteLine("File exists");
-}
-else
-{
-Console.WriteLine("Can't find");
-}
-firstRender = false;
-
-}
-else
-{
-Console.WriteLine("Not first render");
-}
-} *@

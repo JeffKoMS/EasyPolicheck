@@ -10,5 +10,5 @@ public class JobInfo
     public string? SourceDir { get; set; } = string.Empty;
     [Required]
     public string? DestDir { get; set; } = string.Empty;
-    public string? JobLang { get; set; } = string.Empty;
+    public string? JobLang { get; set; } = "en-US";
 }

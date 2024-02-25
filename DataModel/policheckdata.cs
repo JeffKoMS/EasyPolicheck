@@ -3,5 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 public class PolicheckLocation
 {
-    public string? PCLocation { get; set; }
+    [Required]
+    public string? PCLocation { get; set; } = string.Empty;
 }

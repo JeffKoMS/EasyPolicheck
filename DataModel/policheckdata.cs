@@ -1,4 +1,5 @@
 namespace EasyPolicheck.Data;
+using System.ComponentModel.DataAnnotations;
 
 public class PolicheckLocation
 {

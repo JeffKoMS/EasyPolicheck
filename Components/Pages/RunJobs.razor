@@ -1,6 +1,10 @@
 ﻿@page "/"
 @using EasyPolicheck.Data;
+@using System.Text.Json;
+@using System.Linq;
+@using CommunityToolkit.Maui.Storage;
 @inject JobsService JobsService
+@inject PolicheckService PolicheckService
 
 
 <div>
@@ -11,12 +15,49 @@
 
 @code {
 
-    string runStatus = "Verifying Policheck location";
+    public string? runStatus = "Verifying Policheck location";
+    public string? poliInstall = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
+    @"\policheck\tools\Policheck.exe";
+    List<JobInfo> JobsInfo = new List<JobInfo>();
+    List<PolicheckLocation> LocationInfo = new List<PolicheckLocation>();
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override void OnInitialized()
     {
+        
+        var jobs = JobsService.LoadJobs();
+        JobsInfo.AddRange(jobs);
 
-        @* if (firstRender)
+        var pcLocation = PolicheckService.LoadLocation();
+        LocationInfo.AddRange(pcLocation);
+        
+        @* bool found = File.Exists(poliInstall); *@
+        if (File.Exists(poliInstall))
+        {
+            runStatus = "Policheck located and ready to run.";
+        }
+
+        Console.WriteLine(poliInstall);
+
+    }
+
+    private async void browseFolder(bool temp)
+    {
+        var folder = await FolderPicker.PickAsync(default);
+        if (folder.IsSuccessful)
+        {
+            //do something
+        }
+        else
+        {
+            //do something later
+        }
+    }
+}
+
+@* protected override void OnAfterRender(bool firstRender)
+{
+
+if (firstRender)
 {
 string poliInstall = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
 @"\policheck\tools\policheck.exe";
@@ -36,6 +77,5 @@ firstRender = false;
 else
 {
 Console.WriteLine("Not first render");
-} *@
-    }
 }
+} *@

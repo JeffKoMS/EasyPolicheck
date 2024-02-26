@@ -4,8 +4,6 @@
 @using System.Linq;
 @using CommunityToolkit.Maui.Storage;
 @inject JobsService JobsService
-@inject PolicheckService PolicheckService
-
 
 <div>
     @runStatus
@@ -20,19 +18,13 @@
     @"\policheck\tools\Policheck.exe";
 
 
-    List<PolicheckLocation> LocationInfo = new List<PolicheckLocation>();
-
     List<JobInfo> JobsInfo = new List<JobInfo>();
-    @* List<PolicheckLocation> LocationInfo = new List<PolicheckLocation>(); *@
 
     protected override void OnInitialized()
     {
 
         var jobs = JobsService.LoadJobs();
         JobsInfo.AddRange(jobs);
-
-        var poliLocation = PolicheckService.LoadLocation();
-        LocationInfo.AddRange(poliLocation);
 
         @* bool found = File.Exists(poliInstall); *@
         if (File.Exists(poliInstall))

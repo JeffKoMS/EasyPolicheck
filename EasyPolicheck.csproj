@@ -25,7 +25,7 @@
         <ApplicationTitle>EasyPolicheck</ApplicationTitle>
 
         <!-- App Identifier -->
-        <ApplicationId>com.companyname.easypolicheck</ApplicationId>
+        <ApplicationId>EasyPolicheck</ApplicationId>
 
         <!-- Versions -->
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>

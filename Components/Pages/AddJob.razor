@@ -1,0 +1,115 @@
+@page "/addjob"
+@using EasyPolicheck.Data;
+@using System.Text.Json;
+@using System.Text.Json.Nodes;
+@using System.Linq;
+@using CommunityToolkit.Maui.Storage;
+@inject JobsService JobsService
+@inject NavigationManager NavigationManager
+
+<h3 class="mb-4">New job information</h3>
+
+<div class="container" style="align:left">
+    <div class="row mb-4">
+        <div class="col-md">
+            <label><strong>Job title</strong></label>
+            <input type="text" class="form-control" placeholder="Enter a name for this job" @bind="newJobTitle" />
+        </div>
+        <div class="col-md">
+            &nbsp;
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md">
+            <label><strong>Source folder</strong></label>
+            <input disabled class="form-control" type="text" placeholder="Select Browse to set source directory"
+                @bind="newSourceDir" />
+        </div>
+        <div class="col-md mt-auto">
+            <button class="btn btn-primary" @onclick="@(() => browseFolder(true))">Browse</button>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md">
+            <label><strong>Output folder</strong></label>
+            <input disabled class="form-control" type="text" placeholder="Select Browse to set output directory"
+                @bind="newDestDir" />
+        </div>
+        <div class="col-md mt-auto">
+            <button class="btn btn-primary" @onclick="@(() => browseFolder(false))">Browse</button>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div>
+            <button class="btn btn-primary" @onclick="SaveNew">Save</button>
+            <button class="btn btn-secondary mx-2"
+                @onclick="@(() => goPage("managejobs", string.Empty))">Cancel</button>
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+    List<JobInfo> JobsInfo = new List<JobInfo>();
+    string? newJobTitle;
+    string? newSourceDir;
+    string? newDestDir;
+    string? newJobLang = "en-US";
+
+    private async void browseFolder(bool temp)
+    {
+        var folder = await FolderPicker.PickAsync(default);
+        if (folder.IsSuccessful)
+        {
+            if (temp)
+            {
+                newSourceDir = folder.Folder.Path;
+                StateHasChanged();
+            }
+            else
+            {
+                newDestDir = folder.Folder.Path;
+                StateHasChanged();
+            }
+        }
+        else
+        {
+            //do something later
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        var jobs = JobsService.LoadJobs();
+        JobsInfo.AddRange(jobs);
+    }
+
+    private void SaveNew()
+    {
+        JobsInfo.Add(new JobInfo
+            {
+                Id = Guid.NewGuid().ToString(),
+                JobTitle = newJobTitle,
+                SourceDir = newSourceDir,
+                DestDir = newDestDir,
+                JobLang = newJobLang
+            }
+        );
+        JobsService.SaveJobs(JobsInfo);
+        goPage("managejobs", string.Empty);
+    }
+
+    private void goPage(string page, string rId)
+    {
+        if (rId == string.Empty)
+        {
+            NavigationManager.NavigateTo(page);
+        }
+        else
+        {
+            NavigationManager.NavigateTo(page + "/" + rId);
+        }
+    }
+
+}

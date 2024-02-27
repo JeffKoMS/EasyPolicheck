@@ -1,0 +1,117 @@
+﻿@page "/"
+@using EasyPolicheck.Data;
+@using System.IO;
+@using System.Text.Json;
+@using System.Linq;
+@using CommunityToolkit.Maui.Storage;
+@using System.Diagnostics
+@inject JobsService JobsService
+@inject NavigationManager NavigationManager
+
+
+<div class="col-md-auto text-left mb-5">
+    <h2>Run Jobs</h2>
+</div>
+
+
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var job in JobsInfo)
+    {
+        <div class="col">
+            <div class="card" border-dark>
+                <div class="card-header">
+                    <h5>@job.JobTitle</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" style="font-size:10pt"><strong>SRC: </strong> @job.SourceDir</li>
+                    <li class="list-group-item" style="font-size:10pt"><strong>DST: </strong> @job.DestDir</li>
+                </ul>
+                <div class="card-footer">
+                    <div class="btn-group" style="float:right;" role="group" aria-label="Basic example">
+                        <button class="btn btn-primary btn-sm" style="width:60px;"
+                            @onclick="@(() => runJob(@job.SourceDir, @job.DestDir, @job.JobLang))">Run</button>
+                        <button class="btn btn-success btn-sm" style="width:60px;"
+                            @onclick="@(() => Process.Start("explorer", @job.DestDir))">Open</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+@code {
+
+    public string? runStatus = "Verifying Policheck location";
+    public string poliInstall = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
+    @"\policheck\tools\policheck.exe";
+    public string PCSettingFile = Path.Combine(@"wwwroot/data", "pclocation.txt");
+    public string? pcRunLocation = "";
+
+
+    List<JobInfo> JobsInfo = new List<JobInfo>();
+
+
+
+    protected override void OnInitialized()
+    {
+
+        if (pcSetup(poliInstall, PCSettingFile) == true)
+        {
+            // Just keep running
+        }
+        else
+        {
+            NavigationManager.NavigateTo("setup");
+        }
+
+        var jobs = JobsService.LoadJobs();
+        JobsInfo.AddRange(jobs);
+    }
+
+    private void runJob(string srcDir, string destDir, string lang)
+    {
+
+        string inputFileFolderName = srcDir;
+        string correlationId = Guid.NewGuid().ToString();
+        string outputFolderName = Path.Combine(destDir, "ScanResult_" + DateTime.Now.ToString("yyMMdd-HHmmss"));
+        string scanResultFileName = Path.Combine(outputFolderName, "PolicheckScanResults.tsv");
+        string policheckArguments = string.Format(@"/F:""{0}"" /L:""{1}"" /Sev:""1|2"" /O:""{2}"" /CorrelationId:""{3}""",
+        inputFileFolderName, lang, scanResultFileName, correlationId);
+        Directory.CreateDirectory(outputFolderName);
+        Process.Start(poliInstall, policheckArguments);
+    }
+
+    private void openFolder(string output)
+    {
+        Process.Start("explorer", output);
+    }
+
+    private bool pcSetup(string poli, string polisetting)
+    {
+
+        if (!File.Exists(polisetting))
+        {
+            File.WriteAllText(polisetting, "");
+        }
+        string readSetting = File.ReadAllText(polisetting);
+
+        if (File.Exists(poli))
+        {
+            pcRunLocation = poli;
+            return true;
+        }
+        else if (readSetting != "")
+        {
+            pcRunLocation = readSetting;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+}

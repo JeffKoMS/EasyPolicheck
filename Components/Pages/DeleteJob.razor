@@ -1,0 +1,90 @@
+@page "/deletejob"
+@page "/deletejob/{EditId}"
+@using EasyPolicheck.Data;
+@using System.Text.Json;
+@using System.Linq;
+@inject JobsService JobsService
+@inject NavigationManager NavigationManager
+
+<h3>Delete job</h3>
+
+<div class="container" style="align:left">
+    <div class="row mb-4">
+        <div class="col-md">
+            <label><strong>Job title</strong></label>
+            <input diabled type="text" class="form-control" @bind="delJobTitle" />
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md">
+            <label><strong>Source folder</strong></label>
+            <input disabled class="form-control" type="text"  @bind="delSourceDir" />
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md">
+            <label><strong>Output folder</strong></label>
+            <input disabled class="form-control" type="text" @bind="delDestDir" />
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div>
+            <button class="btn btn-danger" @onclick="DeleteSave">Delete</button>
+            <button class="btn btn-secondary mx-2"
+                @onclick="@(() => goPage("managejobs", string.Empty))">Cancel</button>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public string? EditId { get; set; }
+
+    string? delJobTitle;
+    string? delSourceDir;
+    string? delDestDir;
+
+    List<JobInfo> JobsInfo = new List<JobInfo>();
+
+    protected override void OnInitialized()
+    {
+        var jobs = JobsService.LoadJobs();
+        JobsInfo.AddRange(jobs);
+
+        foreach (var deleteItem in JobsInfo)
+        {
+            if (deleteItem.Id == EditId)
+            {
+                delJobTitle = deleteItem.JobTitle;
+                delSourceDir = deleteItem.SourceDir;
+                delDestDir = deleteItem.DestDir;
+            }
+        }
+    }
+
+    public void DeleteSave()
+    {
+        var delItem = JobsInfo.SingleOrDefault(r => r.Id == EditId);
+        if (delItem != null)
+        {
+            JobsInfo.Remove(delItem);
+        }
+
+        JobsService.SaveJobs(JobsInfo);
+        goPage("managejobs", string.Empty);
+    }
+
+    private void goPage(string page, string rId)
+    {
+        if (rId == string.Empty)
+        {
+            NavigationManager.NavigateTo(page);
+        }
+        else
+        {
+            NavigationManager.NavigateTo(page + "/" + rId);
+        }
+    }
+
+}

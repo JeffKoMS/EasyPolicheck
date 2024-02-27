@@ -1,0 +1,126 @@
+@page "/editjob"
+@page "/editjob/{EditId}"
+@using EasyPolicheck.Data;
+@using System.Text.Json;
+@using System.Linq;
+@using CommunityToolkit.Maui.Storage;
+@inject JobsService JobsService
+@inject NavigationManager NavManager
+
+<h3>Edit job information</h3>
+
+<div class="container" style="align:left">
+    <div class="row mb-4">
+        <div class="col-md">
+            <label><strong>Job title</strong></label>
+            <input type="text" class="form-control" @bind="newJobTitle" />
+        </div>
+        <div class="col-md">
+            &nbsp;
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md">
+            <label><strong>Source folder</strong></label>
+            <input disabled class="form-control" type="text"  @bind="newSourceDir" />
+        </div>
+        <div class="col-md mt-auto">
+            <button class="btn btn-primary" @onclick="@(() => browseFolder(true))">Browse</button>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md">
+            <label><strong>Output folder</strong></label>
+            <input disabled class="form-control" type="text" @bind="newDestDir" />
+        </div>
+        <div class="col-md mt-auto">
+            <button class="btn btn-primary" @onclick="@(() => browseFolder(false))">Browse</button>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div>
+            <button class="btn btn-primary" @onclick="SaveUpdate">Save</button>
+            <button class="btn btn-secondary mx-2"
+                @onclick="@(() => goPage("managejobs", string.Empty))">Cancel</button>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public string? EditId { get; set; }
+
+    string? newJobTitle;
+    string? newSourceDir;
+    string? newDestDir;
+
+    List<JobInfo> JobsInfo = new List<JobInfo>();
+
+    protected override void OnInitialized()
+    {
+        var jobs = JobsService.LoadJobs();
+        JobsInfo.AddRange(jobs);
+
+        foreach (var editItem in JobsInfo)
+        {
+            if (editItem.Id == EditId)
+            {
+                newJobTitle = editItem.JobTitle;
+                newSourceDir = editItem.SourceDir;
+                newDestDir = editItem.DestDir;
+            }
+        }
+    }
+
+    private async void browseFolder(bool temp)
+    {
+        var folder = await FolderPicker.PickAsync(default);
+        if (folder.IsSuccessful)
+        {
+            if (temp)
+            {
+                newSourceDir = folder.Folder.Path;
+                StateHasChanged();
+            }
+            else
+            {
+                newDestDir = folder.Folder.Path;
+                StateHasChanged();
+            }
+        }
+        else
+        {
+            //do something later
+        }
+    }
+
+    public void SaveUpdate()
+    {
+        foreach (var editItem in JobsInfo)
+        {
+            if (editItem.Id == EditId)
+            {
+                editItem.JobTitle = newJobTitle;
+                editItem.SourceDir = newSourceDir;
+                editItem.DestDir = newDestDir;
+            }
+        }
+
+        JobsService.SaveJobs(JobsInfo);
+        goPage("managejobs", string.Empty);
+    }
+
+    public void goPage(string url, string? rId)
+    {
+        if (rId == string.Empty)
+        {
+            NavManager.NavigateTo(url);
+        }
+        else
+        {
+            NavManager.NavigateTo(url + rId);
+        }
+    }
+
+}

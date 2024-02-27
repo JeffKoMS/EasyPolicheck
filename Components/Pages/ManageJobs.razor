@@ -1,0 +1,74 @@
+﻿@page "/managejobs"
+@using EasyPolicheck.Data;
+@using System.Text.Json;
+@using System.Linq;
+@inject JobsService JobsService
+@inject NavigationManager NavigationManager
+
+
+
+<div class="row mb-5">
+    <div class="col-md-auto text-left">
+        <h2>Manage Jobs</h2>
+    </div>
+    <div class="col-md-auto"><button class="btn btn-primary" @onclick="@(() => goPage("addjob", string.Empty))">Add
+            Job</button></div>
+</div>
+
+
+@if (JobsInfo == null || JobsInfo.Count() == 0)
+{
+    <p><em>No jobs found...</em></p>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var job in JobsInfo)
+        {
+            <div class="col">
+                <div class="card" border-dark>
+                    <div class="card-header">
+                        <h5>@job.JobTitle</h5>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" style="font-size:10pt"><strong>SRC: </strong> @job.SourceDir</li>
+                        <li class="list-group-item" style="font-size:10pt"><strong>DST: </strong> @job.DestDir</li>
+                    </ul>
+                    <div class="card-footer">
+                        <div class="btn-group" style="float:right;" role="group" aria-label="Basic example">
+                            <button class="btn btn-primary btn-sm" style="width:60px;"
+                                @onclick="@(() => goPage("editjob", job.Id))">Edit</button>
+                            <button class="btn btn-danger btn-sm" style="width:60px;"
+                                @onclick="@(() => goPage("deletejob", job.Id))">Delete</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    List<JobInfo> JobsInfo = new List<JobInfo>();
+    public bool Collapsed;
+    protected override void OnInitialized()
+    {
+        var jobs = JobsService.LoadJobs();
+        JobsInfo.AddRange(jobs);
+
+    }
+
+    private void goPage(string url, string rId)
+    {
+        if (rId == string.Empty)
+        {
+            NavigationManager.NavigateTo(url);
+        }
+        else
+        {
+            NavigationManager.NavigateTo(url + "/" + rId);
+        }
+    }
+
+}

@@ -1,0 +1,75 @@
+@page "/setup"
+@using CommunityToolkit.Maui.Storage;
+@inject NavigationManager NavigationManager
+
+<div class="container" style="align:left">
+    <div class="col-md-auto text-left">
+        <h2>PoliCheck not in expected location</h2>
+    </div>
+
+    <div class="container" style="align:left">
+        <div class="row">
+            <div class="col-lg">
+                <label><strong>Locate PoliCheck installation folder</strong></label>
+                <input disabled class="form-control" type="text" @bind="newPoliDir" />
+            </div>
+            <div class="col-md mt-auto">
+                <button class="btn btn-primary" @onclick="@(() => browseFolder())">Browse</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg">
+                <label class="text-danger">@validation</label>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div>
+                <button class="btn btn-primary" @onclick="SaveUpdate">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+
+    public string? newPoliDir = "";
+    public string? validation = "";
+    public bool PoliFound = false;
+    public string PCSettingFile = Path.Combine(@"wwwroot/data", "pclocation.txt");
+
+
+    public void SaveUpdate()
+    {
+        if (File.Exists(newPoliDir + @"\tools\policheck.exe"))
+        {
+            File.WriteAllText(PCSettingFile, newPoliDir + @"\tools\policheck.exe");
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            validation = "PoliCheck executable not found in folder.";
+            StateHasChanged();
+        }
+
+    }
+
+    private async void browseFolder()
+    {
+        var folder = await FolderPicker.PickAsync(default);
+        validation = "";
+        StateHasChanged();
+        if (folder.IsSuccessful)
+        {
+            newPoliDir = folder.Folder.Path.ToString();
+            StateHasChanged();
+        }
+        else
+        {
+            //do something later
+        }
+    }
+
+
+}

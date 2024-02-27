@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using EasyPolicheck.Data;
+@using System.IO;
 @using System.Text.Json;
 @using System.Linq;
 @using CommunityToolkit.Maui.Storage;
@@ -29,7 +30,7 @@
                     <div class="btn-group" style="float:right;" role="group" aria-label="Basic example">
                         <button class="btn btn-primary btn-sm" style="width:60px;" @onclick="@(() => runJob())">Run</button>
                         <button class="btn btn-danger btn-sm" style="width:60px;"
-                            @onclick="@(() => openFolder())">Open</button>
+                            @onclick="@(() => openFolder(@job.DestDir))">Open</button>
                     </div>
 
                 </div>
@@ -73,9 +74,9 @@
 
     }
 
-    private void openFolder()
+    private void openFolder(string output)
     {
-
+        Process.Start("explorer", output);
     }
 
     private bool pcSetup(string poli, string polisetting)

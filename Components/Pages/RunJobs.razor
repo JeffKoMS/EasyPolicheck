@@ -4,10 +4,38 @@
 @using System.Linq;
 @using CommunityToolkit.Maui.Storage;
 @inject JobsService JobsService
+@inject NavigationManager NavigationManager
 
-<div>
-    @runStatus
-    <button class="btn btn-primary">Browse</button>
+
+<div class="col-md-auto text-left mb-5">
+    <h2>Run Jobs</h2>
+</div>
+
+
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var job in JobsInfo)
+    {
+        <div class="col">
+            <div class="card" border-dark>
+                <div class="card-header">
+                    <h5>@job.JobTitle</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" style="font-size:10pt"><strong>SRC: </strong> @job.SourceDir</li>
+                    <li class="list-group-item" style="font-size:10pt"><strong>DST: </strong> @job.DestDir</li>
+                </ul>
+                <div class="card-footer">
+                    <div class="btn-group" style="float:right;" role="group" aria-label="Basic example">
+                        <button class="btn btn-primary btn-sm" style="width:60px;" @onclick="@(() => runJob())">Run</button>
+                        <button class="btn btn-danger btn-sm" style="width:60px;"
+                            @onclick="@(() => openFolder())">Open</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
 </div>
 
 
@@ -15,37 +43,64 @@
 
     public string? runStatus = "Verifying Policheck location";
     public string poliInstall = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
-    @"\policheck\tools\Policheck.exe";
+    @"\policheck\tools\policheck.exe";
+    public string PCSettingFile = Path.Combine(@"wwwroot/data", "pclocation.txt");
+    public string? pcRunLocation = "";
 
 
     List<JobInfo> JobsInfo = new List<JobInfo>();
 
+
+
     protected override void OnInitialized()
     {
 
-        var jobs = JobsService.LoadJobs();
-        JobsInfo.AddRange(jobs);
-
-        @* bool found = File.Exists(poliInstall); *@
-        if (File.Exists(poliInstall))
+        if (pcSetup(poliInstall, PCSettingFile) == true)
         {
-            runStatus = "Policheck located and ready to run.";
-        }
-
-        Console.WriteLine(poliInstall);
-
-    }
-
-    private async void browseFolder(bool temp)
-    {
-        var folder = await FolderPicker.PickAsync(default);
-        if (folder.IsSuccessful)
-        {
-            //do something
+            Console.WriteLine("Got here");
         }
         else
         {
-            //do something later
+            NavigationManager.NavigateTo("setup");
+        }
+
+        var jobs = JobsService.LoadJobs();
+        JobsInfo.AddRange(jobs);
+    }
+
+    private void runJob()
+    {
+
+    }
+
+    private void openFolder()
+    {
+
+    }
+
+    private bool pcSetup(string poli, string polisetting)
+    {
+
+        if (!File.Exists(polisetting))
+        {
+            File.WriteAllText(polisetting, "");
+        }
+        string readSetting = File.ReadAllText(polisetting);
+
+        if (File.Exists(poli))
+        {
+            pcRunLocation = poli;
+            return true;
+        }
+        else if (readSetting != "")
+        {
+            pcRunLocation = readSetting;
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
+
 }

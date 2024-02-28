@@ -45,8 +45,7 @@
 @code {
 
     public string? runStatus = "Verifying Policheck location";
-    public string poliInstall = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +
-    @"\policheck\tools\policheck.exe";
+
     public string PCSettingFile = Path.Combine(@"wwwroot/data", "pclocation.txt");
     public string? pcRunLocation = "";
 
@@ -58,7 +57,7 @@
     protected override void OnInitialized()
     {
 
-        if (pcSetup(poliInstall, PCSettingFile) == true)
+        if (pcSetup(PCSettingFile) == true)
         {
             // Just keep running
         }
@@ -81,7 +80,7 @@
         string policheckArguments = string.Format(@"/F:""{0}"" /L:""{1}"" /Sev:""1|2"" /O:""{2}"" /CorrelationId:""{3}""",
         inputFileFolderName, lang, scanResultFileName, correlationId);
         Directory.CreateDirectory(outputFolderName);
-        Process.Start(poliInstall, policheckArguments);
+        Process.Start(pcRunLocation, policheckArguments);
     }
 
     private void openFolder(string output)
@@ -89,7 +88,7 @@
         Process.Start("explorer", output);
     }
 
-    private bool pcSetup(string poli, string polisetting)
+    private bool pcSetup(string polisetting)
     {
 
         if (!File.Exists(polisetting))
@@ -98,14 +97,10 @@
         }
         string readSetting = File.ReadAllText(polisetting);
 
-        if (File.Exists(poli))
-        {
-            pcRunLocation = poli;
-            return true;
-        }
-        else if (readSetting != "")
+        if (readSetting != "")
         {
             pcRunLocation = readSetting;
+            // Add code to confirm pcRunLocation is still valide with file.exists
             return true;
         }
         else

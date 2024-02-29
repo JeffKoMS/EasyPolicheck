@@ -97,10 +97,9 @@
         }
         string readSetting = File.ReadAllText(polisetting);
 
-        if (readSetting != "")
+        if (File.Exists(readSetting))
         {
             pcRunLocation = readSetting;
-            // Add code to confirm pcRunLocation is still valide with file.exists
             return true;
         }
         else

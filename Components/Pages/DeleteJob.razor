@@ -28,6 +28,12 @@
         </div>
     </div>
     <div class="row mb-4">
+        <div class="col-md">
+            <label><strong>Culture</strong></label>
+            <input disabled class="form-control" type="text" @bind="delLang" />
+        </div>
+    </div>
+    <div class="row mb-4">
         <div>
             <button class="btn btn-danger" @onclick="DeleteSave">Delete</button>
             <button class="btn btn-secondary mx-2"
@@ -44,6 +50,7 @@
     string? delJobTitle;
     string? delSourceDir;
     string? delDestDir;
+    string? delLang;
 
     List<JobInfo> JobsInfo = new List<JobInfo>();
 
@@ -59,6 +66,7 @@
                 delJobTitle = deleteItem.JobTitle;
                 delSourceDir = deleteItem.SourceDir;
                 delDestDir = deleteItem.DestDir;
+                delLang = deleteItem.JobLang;
             }
         }
     }

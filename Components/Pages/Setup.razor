@@ -37,7 +37,8 @@
     public string? newPoliDir = "";
     public string? validation = "";
     public bool PoliFound = false;
-    public string PCSettingFile = Path.Combine(@"wwwroot/data", "pclocation.txt");
+    //public string PCSettingFile = Path.Combine(@"wwwroot/data", "pclocation.txt");
+    public string PCSettingFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "pclocation.txt");
 
 
     public void SaveUpdate()

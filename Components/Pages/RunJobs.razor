@@ -47,7 +47,8 @@
 
     public string? runStatus = "Verifying Policheck location";
 
-    public string PCSettingFile = Path.Combine(@"wwwroot/data", "pclocation.txt");
+    //public string PCSettingFile = Path.Combine(@"wwwroot/data", "pclocation.txt");
+    public string PCSettingFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "pclocation.txt");
     public string? pcRunLocation = "";
 
 

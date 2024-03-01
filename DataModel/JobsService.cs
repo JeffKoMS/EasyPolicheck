@@ -8,7 +8,8 @@ public class JobsService
 
     public JobsService()
     {
-        jobsFile = Path.Combine(@"wwwroot/data", "policheckJobs.json");
+        //jobsFile = Path.Combine(@"./wwwroot/data", "policheckJobs.json"); 
+        jobsFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "policheckJobs.json");
     }
 
     public void SaveJobs(IEnumerable<JobInfo> jobs)
